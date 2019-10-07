@@ -10,6 +10,8 @@ const io = require("socket.io").listen(socketServer);
 
 const jwtAuth = require("./routes/authentication");
 const userRouter = require("./routes/api/users");
+const topicsRoute = require("./routes/api/topics");
+const chatsRoute = require("./routes/api/chats");
 
 const PORT = process.env.PORT || 5000;
 
@@ -31,7 +33,9 @@ io.on("connection", socket => {
 
 // app.use(cookieParser());
 
+app.use(topicsRoute);
 app.use(userRouter);
+app.use(chatsRoute);
 
 app.listen(PORT, () => {
   return console.log("Server running");
