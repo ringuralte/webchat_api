@@ -43,7 +43,7 @@ router.post("/api/signIn", (req, res) => {
               const token = jwt.sign(payload, process.env.TOKEN_SECRET);
               res
                 .cookie("chatusertoken", token, {
-                  expires: new Date(Date.now() + 5000),
+                  expires: new Date(Date.now() + 60000),
                   httpOnly: false
                 })
                 .status(200)

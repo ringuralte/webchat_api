@@ -2,12 +2,13 @@ const jwt = require("jsonwebtoken");
 
 const jwtAuth = function(req, res, next) {
   const token =
-    req.body.token ||
-    req.query.token ||
+    req.body.chatusertoken ||
+    req.query.chatusertoken ||
     req.headers["x-access-token"] ||
-    req.cookies.token;
+    req.cookies.chatusertoken;
 
   if (!token) {
+    console.log("no token");
     res.status(401).json({
       code: 401,
       message: "No token provided"

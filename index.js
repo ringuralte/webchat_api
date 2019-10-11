@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
-// import cookieParser from "cookie-parser";
 const app = express();
 const socketServer = app.listen(3001);
 const io = require("socket.io").listen(socketServer);
@@ -23,6 +23,7 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 io.on("connection", socket => {
   console.log("user connected");
   socket.on("chat message", function(msg) {
@@ -31,7 +32,11 @@ io.on("connection", socket => {
   });
 });
 
-// app.use(cookieParser());
+app.get("/checkToken", jwtAuth, (req, res) => {
+  res.status(200).json({
+    code: 200
+  });
+});
 
 app.use(topicsRoute);
 app.use(userRouter);
