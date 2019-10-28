@@ -21,8 +21,8 @@ app.use(
     credentials: true
   })
 );
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 io.on("connection", socket => {
   console.log("user connected");
