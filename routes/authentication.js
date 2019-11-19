@@ -14,7 +14,11 @@ const jwtAuth = function(req, res, next) {
       message: "No token provided"
     });
   } else {
-    jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
+    //might not work in prod. remove req.cookies.user if not working
+    jwt.verify(token, process.env.TOKEN_SECRET + req.cookies.user, function(
+      err,
+      decoded
+    ) {
       if (err) {
         res.status(401).json({
           code: 401,

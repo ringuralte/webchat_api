@@ -6,14 +6,11 @@ const jwtAuth = require("../authentication");
 const router = express.Router();
 
 router.get("/api/getChats/:titleid", jwtAuth, (req, res) => {
-  // const { title } = req.body
-  // console.log(options)
-  // console.log(req.query.id);
   const id = req.params.titleid;
   const queryString = "SELECT * from chats where titleid = ?";
   db.query(queryString, id)
     .then(rows => {
-      // console.log(rows);
+      console.log("trying to fetch messages");
       res.status(200).json({
         rows,
         code: 200
@@ -26,7 +23,8 @@ router.get("/api/getChats/:titleid", jwtAuth, (req, res) => {
 
 //? maybe try another query that selects everything from the insertId and return that in response
 router.post("/api/postChat", jwtAuth, (req, res) => {
-  const { sender, msg, topic } = req.body;
+  const { msg, topic } = req.body;
+  const sender = req.cookies.user;
   const queryString =
     "INSERT into chats (sender, msg, time_send, titleid, userid) values (?, ?, NOW(), (select id from topics where id=?), (select id from users where user_id=?))";
   db.query(queryString, [sender, msg, topic, sender])

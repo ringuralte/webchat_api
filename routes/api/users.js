@@ -17,11 +17,17 @@ router.post("/api/signUp", (req, res) => {
       const queryString = "INSERT INTO users (user_id, password) VALUES (?, ?)";
       db.query(queryString, [user, hash])
         .then(result => {
-          console.log(`created new user ${result}`);
-          db.end();
+          res.status(200).json({
+            code: 200
+          });
+          // console.log(`created new user ${result}`);
         })
         .catch(err => {
-          console.log(`errror${err.message}`);
+          res.status(400).json({
+            code: 400,
+            msg: "username is not available"
+          });
+          // console.log(`errror this is the message ${err.message}`);
         });
     });
   });
@@ -38,34 +44,47 @@ router.post("/api/signIn", (req, res) => {
           .compare(password, hash)
           .then(same => {
             if (same === true) {
-              console.log("correct password");
+              // console.log("correct password");
               const payload = { user };
-              const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+              const cookieTimer = new Date(Date.now() + 600000);
+
+              //might backfire later consider removing user if  not working in production
+              //also do the same in authentication.js
+              const token = jwt.sign(payload, process.env.TOKEN_SECRET + user);
+
               res
                 .cookie("chatusertoken", token, {
-                  expires: new Date(Date.now() + 60000),
+                  expires: cookieTimer,
+                  httpOnly: true
+                })
+                .cookie("user", user, {
+                  expires: cookieTimer,
                   httpOnly: false
+                  //consider httpOnly false and set another cookie client side
                 })
                 .status(200)
                 .json({
                   code: 200,
-                  user: user,
                   message: "success"
+                  //user: user you can send this to the browser if httpOnly: true is set in cookie user
                 });
             } else {
               console.log("incorrect password");
               res.status(401).json({
                 code: 401,
-                message: "incorrect password"
+                msg: "incorrect password"
               });
             }
           })
-          .catch(err => console.log(err));
+          .catch(err => {
+            res.status(404);
+            console.log(err);
+          });
       } else {
         console.log("user does not exist");
         res.status(401).json({
           code: 401,
-          message: "User does not exist"
+          msg: "User does not exist"
         });
       }
     })
