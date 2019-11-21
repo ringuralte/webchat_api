@@ -60,7 +60,7 @@ router.post("/api/signIn", (req, res) => {
                 .cookie("user", user, {
                   expires: cookieTimer,
                   httpOnly: false
-                  //consider httpOnly false and set another cookie client side
+                  //httpOnly false but check using authentication.js
                 })
                 .status(200)
                 .json({
@@ -91,6 +91,16 @@ router.post("/api/signIn", (req, res) => {
     .catch(err => {
       console.log("error" + err.message);
     });
+});
+
+router.get("/api/signOut", (req, res) => {
+  console.log("sign out");
+  res.clearCookie("chatusertoken");
+  res.clearCookie("user")
+  res.status(200).json({
+    code: 200,
+    msg: "User has logged out"
+  })
 });
 
 module.exports = router;
