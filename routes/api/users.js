@@ -52,7 +52,7 @@ router.post("/api/signIn", (req, res) => {
             if (same === true) {
               // console.log("correct password");
               const payload = { user };
-              const cookieTimer = new Date(Date.now() + 600000);
+              const cookieTimer = new Date(Date.now() + 6000000);
 
               //might backfire later consider removing user if  not working in production
               //also do the same in authentication.js
