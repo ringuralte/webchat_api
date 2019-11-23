@@ -38,8 +38,8 @@ app.get("/checkToken", jwtAuth, (req, res) => {
   });
 });
 
-app.use(topicsRoute);
 app.use(userRouter);
+app.use(topicsRoute);
 app.use(chatsRoute);
 
 app.listen(PORT, () => {

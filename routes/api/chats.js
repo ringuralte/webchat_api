@@ -5,14 +5,16 @@ const jwtAuth = require("../authentication");
 
 const router = express.Router();
 
-router.get("/api/getChats/:titleid", jwtAuth, (req, res) => {
-  const id = req.params.titleid;
-  const queryString = "SELECT * from chats where titleid = ?";
-  db.query(queryString, id)
-    .then(rows => {
-      console.log("trying to fetch messages");
+router.get("/api/getChats/:title", jwtAuth, (req, res) => {
+  const id = JSON.parse(req.params.title);
+  const query = {
+    text: "SELECT * FROM chats WHERE title=$1",
+    values: [id]
+  }
+  db.query(query)
+    .then(result=> {
       res.status(200).json({
-        rows,
+        chats:result.rows,
         code: 200
       });
     })
@@ -25,9 +27,12 @@ router.get("/api/getChats/:titleid", jwtAuth, (req, res) => {
 router.post("/api/postChat", jwtAuth, (req, res) => {
   const { msg, topic } = req.body;
   const sender = req.cookies.user;
-  const queryString =
-    "INSERT into chats (sender, msg, time_send, titleid, userid) values (?, ?, NOW(), (select id from topics where id=?), (select id from users where user_id=?))";
-  db.query(queryString, [sender, msg, topic, sender])
+  const query = {
+    text:
+      "INSERT into chats (sender, msg, time_send, title) values ($1, $2, NOW(), (select title from topics where title=$3))",
+    values: [sender, msg, JSON.parse(topic)]
+  };
+  db.query(query)
     .then(result => {
       res.status(200).json({
         id: result.insertId,

@@ -14,20 +14,23 @@ router.post("/api/signUp", (req, res) => {
   const { user, password } = req.body;
   bcrypt.genSalt(saltRounds, (err, salt) => {
     bcrypt.hash(password, salt, (err, hash) => {
-      const queryString = "INSERT INTO users (user_id, password) VALUES (?, ?)";
-      db.query(queryString, [user, hash])
+      const query = {
+        text: "INSERT INTO users (user_id, password) VALUES ($1, $2)",
+        values: [user, hash]
+      };
+      db.query(query)
         .then(result => {
           res.status(200).json({
             code: 200
           });
-          // console.log(`created new user ${result}`);
+          console.log(`created new user ${result}`);
         })
         .catch(err => {
           res.status(400).json({
             code: 400,
             msg: "username is not available"
           });
-          // console.log(`errror this is the message ${err.message}`);
+          console.log(`errror this is the message ${err.message}`);
         });
     });
   });
@@ -35,11 +38,14 @@ router.post("/api/signUp", (req, res) => {
 
 router.post("/api/signIn", (req, res) => {
   const { user, password } = req.body;
-  const queryString = "SELECT * FROM users WHERE user_id = ?";
-  db.query(queryString, [user])
+  const query = {
+    text: "SELECT * FROM users where user_id = $1",
+    values: [user]
+  };
+  db.query(query)
     .then(result => {
-      if (result.length) {
-        const hash = result[0].password;
+      if (result.rowCount) {
+        const hash = result.rows[0].password;
         bcrypt
           .compare(password, hash)
           .then(same => {
@@ -89,18 +95,18 @@ router.post("/api/signIn", (req, res) => {
       }
     })
     .catch(err => {
-      console.log("error" + err.message);
+      console.log("error  " + err.message);
     });
 });
 
 router.get("/api/signOut", (req, res) => {
   console.log("sign out");
   res.clearCookie("chatusertoken");
-  res.clearCookie("user")
+  res.clearCookie("user");
   res.status(200).json({
     code: 200,
     msg: "User has logged out"
-  })
+  });
 });
 
 module.exports = router;

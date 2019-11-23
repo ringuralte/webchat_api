@@ -1,15 +1,18 @@
 const express = require("express");
 const db = require("../db");
+const jwtAuth = require("../authentication")
 
 const router = express.Router();
 
 router.get("/api/topics", (req, res) => {
-  // const { title } = req.body
-  const queryString = "SELECT title,id from topics";
-  db.query(queryString)
-    .then(rows => {
+  const query = {
+    text: "SELECT id,title FROM topics"
+  };
+  db.query(query)
+    .then(result => {
       res.status(200).json({
-        rows
+        code: 200,
+        topics: result.rows
       });
     })
     .catch(err => {
