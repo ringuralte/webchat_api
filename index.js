@@ -6,8 +6,8 @@ const path = require("path")
 
 require("dotenv").config();
 const app = express();
-const socketServer = app.listen(80);
-const io = require("socket.io").listen(socketServer);
+const server = app.listen(3000);
+const io = require("socket.io")(server);
 
 const jwtAuth = require("./routes/authentication");
 const userRouter = require("./routes/api/users");
