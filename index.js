@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path")
 
 require("dotenv").config();
 const app = express();
@@ -31,6 +32,8 @@ io.on("connection", socket => {
     io.emit("chat message", msg);
   });
 });
+
+app.use(express.static(path.join(__dirname, 'client/out')));
 
 app.get("/checkToken", jwtAuth, (req, res) => {
   res.status(200).json({
