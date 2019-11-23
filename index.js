@@ -35,7 +35,7 @@ io.on("connection", socket => {
 
 app.use(express.static(path.join(__dirname, 'client/out')));
 
-app.get("/checkToken", jwtAuth, (req, res) => {
+app.get("/api/checkToken", jwtAuth, (req, res) => {
   res.status(200).json({
     code: 200
   });
