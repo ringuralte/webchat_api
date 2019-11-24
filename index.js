@@ -1,55 +1,48 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const io = require("socket.io")
 const cookieParser = require("cookie-parser");
-const path = require("path")
+const path = require("path");
 
 require("dotenv").config();
-const app = express();
-const http = require("http").Server(app)
-const socket = io(http);
-
-const jwtAuth = require("./routes/authentication");
-const userRouter = require("./routes/api/users");
-const topicsRoute = require("./routes/api/topics");
-const chatsRoute = require("./routes/api/chats");
 
 const PORT = process.env.PORT || 5000;
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true
-  })
-);
+const app = express();
+const socketServer = app.listen(5001)
+const io = require("socket.io").listen(socketServer)
+
+const userRouter = require("./routes/api/users");
+const topicsRoute = require("./routes/api/topics");
+const chatsRoute = require("./routes/api/chats");
+const checkTokenRoute = require("./routes/api/checkToken");
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-socket.on("connection", socket => {
+
+app.use(express.static(path.join(__dirname, "client/out")))
+
+// const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+
+// const http = require('http')
+// const socketServer = http.createServer(app)
+// const io = require("socket.io").listen(socketServer)
+// socketServer.listen(80)
+io.on("connection", socket => {
   console.log("user connected");
   socket.on("chat message", function(msg) {
     console.log("message:" + JSON.stringify(msg));
     socket.emit("chat message", msg);
   });
 });
-
-app.use(express.static(path.join(__dirname, 'client/out')));
-
-app.get("/api/checkToken", jwtAuth, (req, res) => {
-  res.status(200).json({
-    code: 200
-  });
-});
-
+app.use(checkTokenRoute);
 app.use(userRouter);
 app.use(topicsRoute);
 app.use(chatsRoute);
-
-http.listen(3001, () => {
-  console.log(`connected to 3001`)
-})
-
-app.listen(PORT, () => {
-  return console.log("Server running");
-});
+app.listen(PORT, () => console.log(`Listening on ${PORT}`))

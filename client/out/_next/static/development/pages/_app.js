@@ -90,7 +90,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":3001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5001");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",

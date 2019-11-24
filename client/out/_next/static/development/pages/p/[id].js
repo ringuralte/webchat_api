@@ -142,7 +142,7 @@ var Header = function Header(props) {
 
   var signOut = function signOut(e) {
     e.preventDefault();
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("http://localhost:5000/api/signOut", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("api/signOut", {
       method: "get",
       credentials: "include"
     }).then(function () {
@@ -527,7 +527,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":3001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5001");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",
@@ -654,7 +654,7 @@ var Textbox = function Textbox() {
         changeTextValue("");
       } else {
         sendChatAction({
-          id: json.id,
+          id: json.id[0],
           sender: js_cookie__WEBPACK_IMPORTED_MODULE_8___default.a.get("user"),
           msg: textValue
         });
@@ -67219,7 +67219,7 @@ var ChatRooms = function ChatRooms() {
 
 /***/ }),
 
-/***/ 2:
+/***/ 1:
 /*!********************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fp%2F%5Bid%5D&absolutePagePath=%2Fhome%2Fringu%2FProjects%2Fweb-chat%2Fpages%2Fp%2F%5Bid%5D.js ***!
   \********************************************************************************************************************************************/
@@ -67242,5 +67242,5 @@ module.exports = dll_01f9a3fa864a7b7414d8;
 
 /***/ })
 
-},[[2,"static/runtime/webpack.js"]]]);
+},[[1,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=[id].js.map

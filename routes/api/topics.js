@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("../db");
-const jwtAuth = require("../authentication")
+// const jwtAuth = require("../authentication")
 
 const router = express.Router();
 
