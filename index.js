@@ -29,7 +29,7 @@ const chatsRoute = require("./routes/api/chats");
 const checkTokenRoute = require("./routes/api/checkToken");
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://fast-oasis-98847.herokuapp.com:3000",
   credentials: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
