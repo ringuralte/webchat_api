@@ -9,7 +9,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-const socketServer = app.listen(5001)
+const socketServer = app.listen(PORT)
 const io = require("socket.io").listen(socketServer)
 
 const userRouter = require("./routes/api/users");
