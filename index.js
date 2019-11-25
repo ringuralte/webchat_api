@@ -29,7 +29,7 @@ const checkTokenRoute = require("./routes/api/checkToken");
 //middleware
 app.use(
   cors({
-    origin: "https://fast-oasis-98847.herokuapp.com:3000",
+    origin: "https://fast-oasis-98847.herokuapp.com",
     credentials: true
   })
 );
@@ -48,7 +48,7 @@ app.use(chatsRoute);
 
 //listen
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-server.listen(3000, () => console.log(`Socketio Listening on 3000`));
+server.listen(PORT, () => console.log(`Socketio Listening on 3000`));
 
 //socketio
 io.on("connection", socket => {
