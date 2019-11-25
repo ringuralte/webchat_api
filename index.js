@@ -48,7 +48,7 @@ app.use(chatsRoute);
 
 //listen
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-server.listen(PORT, () => console.log(`Socketio Listening on 3000`));
+server.listen(3000, () => console.log(`Socketio Listening on 3000`));
 
 //socketio
 io.on("connection", socket => {
