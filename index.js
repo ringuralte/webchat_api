@@ -3,14 +3,13 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const http = require('http')
 
 require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-const server = http.createServer(app)
+const server = require('http').Server(app)
 const options = {
   allowUpgrades: true,
   transports: ['polling', 'websocket'],
