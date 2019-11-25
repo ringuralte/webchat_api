@@ -3,14 +3,25 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const http = require('http')
 
 require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-const socketServer = app.listen(5001)
-const io = require("socket.io").listen(socketServer)
+const server = http.createServer(app)
+const io = require("socket.io")(server, {
+  handlePreflightRequest: (req, res) => {
+    const headers = {
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Origin": req.headers.origin,
+      "Access-Control-Allow-Credentials": true
+    };
+    res.writeHeader(200, headers);
+    res.end();
+  }
+})
 
 const userRouter = require("./routes/api/users");
 const topicsRoute = require("./routes/api/topics");
@@ -18,7 +29,7 @@ const chatsRoute = require("./routes/api/chats");
 const checkTokenRoute = require("./routes/api/checkToken");
 
 app.use(cors({
-  origin: "https://fast-oasis-98847.herokuapp.com",
+  origin: "http://localhost:3000",
   credentials: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,6 +52,7 @@ io.on("connection", socket => {
     socket.emit("chat message", msg);
   });
 });
+server.listen(3000)
 app.use(checkTokenRoute);
 app.use(userRouter);
 app.use(topicsRoute);
