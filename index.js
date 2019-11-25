@@ -42,12 +42,12 @@ app.use(userRouter);
 app.use(topicsRoute);
 app.use(chatsRoute);
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-server.listen(80, () => console.log(`Socketio Listening on 80`));
+server.listen(3000, () => console.log(`Socketio Listening on 3000`));
 io.on("connection", socket => {
   console.log("user connected");
   socket.on("chat message", function(msg) {
     console.log("message:" + JSON.stringify(msg));
-    socket.emit("chat message", msg);
+    io.emit("chat message", msg);
   });
 });
 
