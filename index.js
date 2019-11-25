@@ -9,7 +9,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-const socketServer = app.listen(PORT)
+const socketServer = app.listen(5001)
 const io = require("socket.io").listen(socketServer)
 
 const userRouter = require("./routes/api/users");
@@ -18,7 +18,7 @@ const chatsRoute = require("./routes/api/chats");
 const checkTokenRoute = require("./routes/api/checkToken");
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://fast-oasis-98847.herokuapp.com",
   credentials: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
