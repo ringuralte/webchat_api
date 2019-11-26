@@ -142,7 +142,7 @@ var Header = function Header(props) {
 
   var signOut = function signOut(e) {
     e.preventDefault();
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("api/signOut", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("/api/signOut", {
       method: "get",
       credentials: "include"
     }).then(function () {
@@ -437,6 +437,59 @@ var Layout = function Layout(props) {
 
 /***/ }),
 
+/***/ "./components/Loading.js":
+/*!*******************************!*\
+  !*** ./components/Loading.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _material_ui_core_CircularProgress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/CircularProgress */ "./node_modules/@material-ui/core/esm/CircularProgress/index.js");
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+var _jsxFileName = "/home/ringu/Projects/web-chat/components/Loading.js";
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_2__["makeStyles"])(function () {
+  return Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_2__["createStyles"])({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%",
+      margin: "0 auto"
+    }
+  });
+});
+
+var Loading = function Loading() {
+  var classes = useStyles();
+  return __jsx("div", {
+    className: classes.root,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 22
+    },
+    __self: this
+  }, __jsx(_material_ui_core_CircularProgress__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 23
+    },
+    __self: this
+  }));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Loading);
+
+/***/ }),
+
 /***/ "./components/Store.js":
 /*!*****************************!*\
   !*** ./components/Store.js ***!
@@ -476,7 +529,15 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "RECEIVE MESSAGE":
-      return prevState;
+      {
+        console.log(action.payload.topic);
+
+        if (action.payload.topic === JSON.parse(window.localStorage.getItem("topic"))) {
+          return prevState;
+        } else {
+          return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, state);
+        }
+      }
 
     case "FETCH MESSAGE":
       return action.payload;
@@ -487,6 +548,7 @@ function reducer(state, action) {
 }
 
 function sendChatAction(value) {
+  console.log(value);
   socket.emit("chat message", value);
 }
 
@@ -504,8 +566,7 @@ var Store = function Store(props) {
   var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_3___default.a.useState(""),
       _React$useState4 = Object(_babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_React$useState3, 2),
       user = _React$useState4[0],
-      setUser = _React$useState4[1]; // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
-  //topic should not be confused with newLink, newLink fetches data from server
+      setUser = _React$useState4[1]; //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
 
 
@@ -515,7 +576,7 @@ var Store = function Store(props) {
       setTopic = _React$useState6[1];
 
   react__WEBPACK_IMPORTED_MODULE_3___default.a.useEffect(function () {
-    fetch("http://localhost:5000/api/topics", {
+    fetch("/api/topics", {
       credentials: "include"
     }).then(function (res) {
       return res.json();
@@ -527,7 +588,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5000");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",
@@ -545,12 +606,11 @@ var Store = function Store(props) {
       user: user,
       setUser: setUser,
       topic: topic,
-      setTopic: setTopic // dispatchTopic
-
+      setTopic: setTopic
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 56
+      lineNumber: 63
     },
     __self: this
   }, props.children);
@@ -636,7 +696,7 @@ var Textbox = function Textbox() {
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
-    fetch("http://localhost:5000/api/postChat", {
+    fetch("/api/postChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -656,7 +716,8 @@ var Textbox = function Textbox() {
         sendChatAction({
           id: json.id[0],
           sender: js_cookie__WEBPACK_IMPORTED_MODULE_8___default.a.get("user"),
-          msg: textValue
+          msg: textValue,
+          topic: JSON.parse(window.localStorage.getItem("topic"))
         });
         changeTextValue("");
       }
@@ -670,14 +731,14 @@ var Textbox = function Textbox() {
     className: classes.bar,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 74
+      lineNumber: 75
     },
     __self: this
   }, __jsx(_material_ui_core_Toolbar__WEBPACK_IMPORTED_MODULE_7__["default"], {
     className: classes.type,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 75
+      lineNumber: 76
     },
     __self: this
   }, __jsx(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -690,7 +751,7 @@ var Textbox = function Textbox() {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 76
+      lineNumber: 77
     },
     __self: this
   }), __jsx(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -700,7 +761,7 @@ var Textbox = function Textbox() {
     onClick: handleSubmit,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 83
+      lineNumber: 84
     },
     __self: this
   }, "Send")));
@@ -66966,18 +67027,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/router */ "./node_modules/next/dist/client/router.js");
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
-/* harmony import */ var _components_Textbox__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Textbox */ "./components/Textbox.js");
-/* harmony import */ var _components_Store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/Store */ "./components/Store.js");
-/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
-/* harmony import */ var _material_ui_core_List__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core/List */ "./node_modules/@material-ui/core/esm/List/index.js");
-/* harmony import */ var _material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core/ListItem */ "./node_modules/@material-ui/core/esm/ListItem/index.js");
-/* harmony import */ var _material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/ListItemText */ "./node_modules/@material-ui/core/esm/ListItemText/index.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! isomorphic-unfetch */ "./node_modules/isomorphic-unfetch/browser.js");
-/* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
+/* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Loading */ "./components/Loading.js");
+/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
+/* harmony import */ var _components_Textbox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/Textbox */ "./components/Textbox.js");
+/* harmony import */ var _components_Store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/Store */ "./components/Store.js");
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+/* harmony import */ var _material_ui_core_List__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core/List */ "./node_modules/@material-ui/core/esm/List/index.js");
+/* harmony import */ var _material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/ListItem */ "./node_modules/@material-ui/core/esm/ListItem/index.js");
+/* harmony import */ var _material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/core/ListItemText */ "./node_modules/@material-ui/core/esm/ListItemText/index.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! isomorphic-unfetch */ "./node_modules/isomorphic-unfetch/browser.js");
+/* harmony import */ var isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
 
 
 var _jsxFileName = "/home/ringu/Projects/web-chat/pages/p/[id].js";
@@ -66995,8 +67057,9 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement;
 
 
 
-var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["makeStyles"])(function (theme) {
-  return Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["createStyles"])({
+
+var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_8__["makeStyles"])(function (theme) {
+  return Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_8__["createStyles"])({
     root: {
       display: "flex",
       flexDirection: "column",
@@ -67036,20 +67099,22 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["ma
 var ChatRooms = function ChatRooms() {
   var classes = useStyles();
 
-  var _React$useContext = react__WEBPACK_IMPORTED_MODULE_2___default.a.useContext(_components_Store__WEBPACK_IMPORTED_MODULE_6__["storeCTX"]),
+  var _React$useContext = react__WEBPACK_IMPORTED_MODULE_2___default.a.useContext(_components_Store__WEBPACK_IMPORTED_MODULE_7__["storeCTX"]),
       allChats = _React$useContext.allChats,
       dispatch = _React$useContext.dispatch,
       topic = _React$useContext.topic,
-      setTopic = _React$useContext.setTopic;
+      setTopic = _React$useContext.setTopic; // const [loggedInStatus, setLoggedInStatus] = React.useState(false);
 
-  var _React$useState = react__WEBPACK_IMPORTED_MODULE_2___default.a.useState(false),
+
+  var user = js_cookie__WEBPACK_IMPORTED_MODULE_12___default.a.get("user");
+  var scrollRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.useRef(null);
+
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_2___default.a.useState(true),
       _React$useState2 = Object(_babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_React$useState, 2),
-      loggedInStatus = _React$useState2[0],
-      setLoggedInStatus = _React$useState2[1];
-
-  var user = js_cookie__WEBPACK_IMPORTED_MODULE_11___default.a.get("user");
-  var scrollRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.useRef(null); //!TODO the pages load to scroll bottom even when there is not enough
+      isLoading = _React$useState2[0],
+      setIsLoading = _React$useState2[1]; //!TODO the pages load to scroll bottom even when there is not enough
   //chat items and since the container have min-height of 100vh
+
 
   var scrollViewOnSend = function scrollViewOnSend() {
     scrollRef.current.scrollIntoView();
@@ -67060,12 +67125,12 @@ var ChatRooms = function ChatRooms() {
   }; //when component mounts
 
 
-  react__WEBPACK_IMPORTED_MODULE_2___default.a.useEffect(scrollViewOnLoad); //when component is updated
+  react__WEBPACK_IMPORTED_MODULE_2___default.a.useEffect(scrollViewOnLoad, [isLoading]); //when component is updated
 
   react__WEBPACK_IMPORTED_MODULE_2___default.a.useEffect(scrollViewOnSend, [allChats]); //ran when going to a new group by clicking on header topics
 
   react__WEBPACK_IMPORTED_MODULE_2___default.a.useEffect(function () {
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_12___default()("http://localhost:5000/api/getChats/".concat(window.localStorage.getItem("topic")), {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13___default()("/api/getChats/".concat(window.localStorage.getItem("topic")), {
       credentials: "include"
     }).then(function (res) {
       return res.json();
@@ -67075,133 +67140,131 @@ var ChatRooms = function ChatRooms() {
           type: "FETCH MESSAGE",
           payload: json.chats
         });
-        setLoggedInStatus(true);
+        setIsLoading(false);
       } else {
         setTopic("");
         next_router__WEBPACK_IMPORTED_MODULE_3___default.a.push("/signin");
       }
     });
   }, [topic]);
-  var chats;
 
-  if (loggedInStatus) {
-    chats = // user chats goes right aligned
-    __jsx(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, {
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 107
-      },
-      __self: this
-    }, __jsx(_material_ui_core_List__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      className: classes.chatContainer,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 108
-      },
-      __self: this
-    }, _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0___default()(allChats).map(function (key) {
-      if (user === allChats[key].sender) {
-        return __jsx(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          className: classes.chatItemsUser,
-          key: allChats[key].id,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 112
-          },
-          __self: this
-        }, __jsx(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_10__["default"], {
-          primary: "".concat(allChats[key].msg),
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 116
-          },
-          __self: this
-        }));
-      } else {
-        // other users appear on left
-        return __jsx(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          className: classes.chatItems,
-          key: allChats[key].id,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 122
-          },
-          __self: this
-        }, __jsx(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_10__["default"], {
-          primary: __jsx(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, {
+  if (!isLoading) {
+    return (// user chats goes right aligned
+      __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 108
+        },
+        __self: this
+      }, __jsx("div", {
+        className: classes.root,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 109
+        },
+        __self: this
+      }, __jsx(_material_ui_core_List__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: classes.chatContainer,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 110
+        },
+        __self: this
+      }, _babel_runtime_corejs2_core_js_object_keys__WEBPACK_IMPORTED_MODULE_0___default()(allChats).map(function (key) {
+        if (user === allChats[key].sender) {
+          return __jsx(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_10__["default"], {
+            className: classes.chatItemsUser,
+            key: allChats[key].id,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 125
+              lineNumber: 114
             },
             __self: this
-          }, __jsx(_material_ui_core__WEBPACK_IMPORTED_MODULE_13__["Typography"], {
-            className: classes.senderName,
-            component: "span",
+          }, __jsx(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_11__["default"], {
+            primary: "".concat(allChats[key].msg),
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 126
+              lineNumber: 118
             },
             __self: this
-          }, "".concat(allChats[key].sender) + " : "), __jsx(_material_ui_core__WEBPACK_IMPORTED_MODULE_13__["Typography"], {
-            component: "span",
+          }));
+        } else {
+          // other users appear on left
+          return __jsx(_material_ui_core_ListItem__WEBPACK_IMPORTED_MODULE_10__["default"], {
+            className: classes.chatItems,
+            key: allChats[key].id,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 132
+              lineNumber: 124
             },
             __self: this
-          }, "".concat(allChats[key].msg))),
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 123
-          },
-          __self: this
-        }));
-      }
-    })));
+          }, __jsx(_material_ui_core_ListItemText__WEBPACK_IMPORTED_MODULE_11__["default"], {
+            primary: __jsx(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 130
+              },
+              __self: this
+            }, __jsx(_material_ui_core__WEBPACK_IMPORTED_MODULE_14__["Typography"], {
+              className: classes.senderName,
+              component: "span",
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 131
+              },
+              __self: this
+            }, "".concat(allChats[key].sender) + " : "), __jsx(_material_ui_core__WEBPACK_IMPORTED_MODULE_14__["Typography"], {
+              component: "span",
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 137
+              },
+              __self: this
+            }, "".concat(allChats[key].msg))),
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 128
+            },
+            __self: this
+          }));
+        }
+      })), __jsx("div", {
+        ref: scrollRef,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 146
+        },
+        __self: this
+      }), __jsx(_components_Textbox__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 147
+        },
+        __self: this
+      })))
+    );
   } else {
-    chats = __jsx("div", {
-      className: classes.chatContainer,
+    return __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_5__["default"], {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 144
+        lineNumber: 153
       },
       __self: this
-    });
+    }, __jsx(_components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 154
+      },
+      __self: this
+    }), __jsx("div", {
+      ref: scrollRef,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 155
+      },
+      __self: this
+    }));
   }
-
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 148
-    },
-    __self: this
-  }, __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 149
-    },
-    __self: this
-  }, __jsx("div", {
-    className: classes.root,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 150
-    },
-    __self: this
-  }, chats, __jsx("div", {
-    ref: scrollRef,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 153
-    },
-    __self: this
-  }), __jsx(_components_Textbox__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 154
-    },
-    __self: this
-  }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ChatRooms);
@@ -67219,7 +67282,7 @@ var ChatRooms = function ChatRooms() {
 
 /***/ }),
 
-/***/ 1:
+/***/ 2:
 /*!********************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fp%2F%5Bid%5D&absolutePagePath=%2Fhome%2Fringu%2FProjects%2Fweb-chat%2Fpages%2Fp%2F%5Bid%5D.js ***!
   \********************************************************************************************************************************************/
@@ -67242,5 +67305,5 @@ module.exports = dll_01f9a3fa864a7b7414d8;
 
 /***/ })
 
-},[[1,"static/runtime/webpack.js"]]]);
+},[[2,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=[id].js.map

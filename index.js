@@ -10,15 +10,6 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 const server = require("http").Server(app);
-// const options = {
-//   allowUpgrades: true,
-//   transports: ['polling', 'websocket'],
-//   pingTimeout: 9000,
-//   pingInterval: 3000,
-//   cookie: 'io',
-//   httpCompression: true,
-//   origins: '*:*'
-// }
 const io = require("socket.io")(server);
 
 const userRouter = require("./routes/api/users");
@@ -30,6 +21,7 @@ const checkTokenRoute = require("./routes/api/checkToken");
 app.use(
   cors({
     origin: "https://fast-oasis-98847.herokuapp.com",
+    // origin: "http://localhost:3000",
     credentials: true
   })
 );
@@ -48,7 +40,6 @@ app.use(chatsRoute);
 
 //listen
 server.listen(PORT, () => console.log(`Listening on ${PORT}`));
-// server.listen(3000, () => console.log(`Socketio Listening on 3000`));
 
 //socketio
 io.on("connection", socket => {

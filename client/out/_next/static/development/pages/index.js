@@ -142,7 +142,7 @@ var Header = function Header(props) {
 
   var signOut = function signOut(e) {
     e.preventDefault();
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("api/signOut", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("http://localhost:5000/api/signOut", {
       method: "get",
       credentials: "include"
     }).then(function () {
@@ -476,7 +476,18 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "RECEIVE MESSAGE":
-      return prevState;
+      {
+        console.log(action.payload.topic);
+
+        if (action.payload.topic === JSON.parse(window.localStorage.getItem("topic"))) {
+          return prevState;
+        } else {
+          console.log("here error");
+          console.log(JSON.parse(window.localStorage.getItem("topic")));
+          console.log(action.payload.topic);
+          return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, state);
+        }
+      }
 
     case "FETCH MESSAGE":
       return action.payload;
@@ -487,6 +498,7 @@ function reducer(state, action) {
 }
 
 function sendChatAction(value) {
+  console.log(value);
   socket.emit("chat message", value);
 }
 
@@ -527,7 +539,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5000");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",
@@ -545,12 +557,11 @@ var Store = function Store(props) {
       user: user,
       setUser: setUser,
       topic: topic,
-      setTopic: setTopic // dispatchTopic
-
+      setTopic: setTopic
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 56
+      lineNumber: 67
     },
     __self: this
   }, props.children);
@@ -66870,12 +66881,12 @@ var Home = function Home() {
       setTopic = _React$useContext.setTopic;
 
   react__WEBPACK_IMPORTED_MODULE_3___default.a.useEffect(function () {
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13___default()("http://locahost:5000/api/checkToken", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_13___default()("http://localhost:5000/api/checkToken", {
       credentials: "include"
     }).then(function (res) {
       return res.json();
-    }).then(function (result) {
-      if (result.code !== 200) next_router__WEBPACK_IMPORTED_MODULE_4___default.a.push("/signin");
+    }).then(function (json) {
+      if (json.code !== 200) next_router__WEBPACK_IMPORTED_MODULE_4___default.a.push("/signin");
     });
   }, []);
   react__WEBPACK_IMPORTED_MODULE_3___default.a.useEffect(function () {
@@ -66965,7 +66976,7 @@ var Home = function Home() {
 
 /***/ }),
 
-/***/ 3:
+/***/ 1:
 /*!*************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2F&absolutePagePath=%2Fhome%2Fringu%2FProjects%2Fweb-chat%2Fpages%2Findex.js ***!
   \*************************************************************************************************************************/
@@ -66988,5 +66999,5 @@ module.exports = dll_01f9a3fa864a7b7414d8;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[1,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=index.js.map

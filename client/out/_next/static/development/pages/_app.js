@@ -39,7 +39,15 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "RECEIVE MESSAGE":
-      return prevState;
+      {
+        console.log(action.payload.topic);
+
+        if (action.payload.topic === JSON.parse(window.localStorage.getItem("topic"))) {
+          return prevState;
+        } else {
+          return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, state);
+        }
+      }
 
     case "FETCH MESSAGE":
       return action.payload;
@@ -50,6 +58,7 @@ function reducer(state, action) {
 }
 
 function sendChatAction(value) {
+  console.log(value);
   socket.emit("chat message", value);
 }
 
@@ -67,8 +76,7 @@ var Store = function Store(props) {
   var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_3___default.a.useState(""),
       _React$useState4 = Object(_babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_React$useState3, 2),
       user = _React$useState4[0],
-      setUser = _React$useState4[1]; // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
-  //topic should not be confused with newLink, newLink fetches data from server
+      setUser = _React$useState4[1]; //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
 
 
@@ -78,7 +86,7 @@ var Store = function Store(props) {
       setTopic = _React$useState6[1];
 
   react__WEBPACK_IMPORTED_MODULE_3___default.a.useEffect(function () {
-    fetch("http://localhost:5000/api/topics", {
+    fetch("/api/topics", {
       credentials: "include"
     }).then(function (res) {
       return res.json();
@@ -90,7 +98,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5000");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",
@@ -108,12 +116,11 @@ var Store = function Store(props) {
       user: user,
       setUser: setUser,
       topic: topic,
-      setTopic: setTopic // dispatchTopic
-
+      setTopic: setTopic
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 56
+      lineNumber: 63
     },
     __self: this
   }, props.children);
@@ -3504,7 +3511,7 @@ var defaultTheme = Object(_createMuiTheme__WEBPACK_IMPORTED_MODULE_0__["default"
 /*!************************************************************!*\
   !*** ./node_modules/@material-ui/core/esm/styles/index.js ***!
   \************************************************************/
-/*! exports provided: createMuiTheme, createStyles, makeStyles, MuiThemeProvider, responsiveFontSizes, styled, useTheme, withStyles, withTheme, hexToRgb, rgbToHex, hslToRgb, decomposeColor, recomposeColor, getContrastRatio, getLuminance, emphasize, fade, darken, lighten, easing, duration, formatMs, isString, isNumber */
+/*! exports provided: hexToRgb, rgbToHex, hslToRgb, decomposeColor, recomposeColor, getContrastRatio, getLuminance, emphasize, fade, darken, lighten, createMuiTheme, createStyles, makeStyles, MuiThemeProvider, responsiveFontSizes, styled, easing, duration, formatMs, isString, isNumber, useTheme, withStyles, withTheme */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

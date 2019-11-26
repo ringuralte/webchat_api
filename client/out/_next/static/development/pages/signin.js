@@ -205,7 +205,7 @@ var Header = function Header(props) {
 
   var signOut = function signOut(e) {
     e.preventDefault();
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("http://localhost:5000/api/signOut", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_8___default()("/api/signOut", {
       method: "get",
       credentials: "include"
     }).then(function () {
@@ -539,7 +539,15 @@ function reducer(state, action) {
 
   switch (action.type) {
     case "RECEIVE MESSAGE":
-      return prevState;
+      {
+        console.log(action.payload.topic);
+
+        if (action.payload.topic === JSON.parse(window.localStorage.getItem("topic"))) {
+          return prevState;
+        } else {
+          return Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, state);
+        }
+      }
 
     case "FETCH MESSAGE":
       return action.payload;
@@ -550,6 +558,7 @@ function reducer(state, action) {
 }
 
 function sendChatAction(value) {
+  console.log(value);
   socket.emit("chat message", value);
 }
 
@@ -567,8 +576,7 @@ var Store = function Store(props) {
   var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_3___default.a.useState(""),
       _React$useState4 = Object(_babel_runtime_corejs2_helpers_esm_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_React$useState3, 2),
       user = _React$useState4[0],
-      setUser = _React$useState4[1]; // const [topic, dispatchTopic] = React.useReducer(topicReducer, "")
-  //topic should not be confused with newLink, newLink fetches data from server
+      setUser = _React$useState4[1]; //topic should not be confused with newLink, newLink fetches data from server
   //while topic is just used for UI stuffs in header component
 
 
@@ -578,7 +586,7 @@ var Store = function Store(props) {
       setTopic = _React$useState6[1];
 
   react__WEBPACK_IMPORTED_MODULE_3___default.a.useEffect(function () {
-    fetch("http://localhost:5000/api/topics", {
+    fetch("/api/topics", {
       credentials: "include"
     }).then(function (res) {
       return res.json();
@@ -590,7 +598,7 @@ var Store = function Store(props) {
   }, []);
 
   if (!socket) {
-    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":3001");
+    socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(":5000");
     socket.on("chat message", function (msg) {
       dispatch({
         type: "RECEIVE MESSAGE",
@@ -608,12 +616,11 @@ var Store = function Store(props) {
       user: user,
       setUser: setUser,
       topic: topic,
-      setTopic: setTopic // dispatchTopic
-
+      setTopic: setTopic
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 56
+      lineNumber: 63
     },
     __self: this
   }, props.children);
@@ -45510,7 +45517,7 @@ var SignIn = function SignIn() {
 
   var signIn = function signIn(e) {
     e.preventDefault();
-    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_11___default()("http://localhost:5000/api/signIn", {
+    isomorphic_unfetch__WEBPACK_IMPORTED_MODULE_11___default()("/api/signIn", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
