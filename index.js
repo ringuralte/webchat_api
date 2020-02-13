@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: "https://fast-oasis-98847.herokuapp.com",
     origin: "http://localhost:3000",
-    origin: "http://webchat.ringuralte.now.sh",
+    origin: "https://webchat.ringuralte.now.sh",
     credentials: true
   })
 );
