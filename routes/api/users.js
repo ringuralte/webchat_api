@@ -65,17 +65,18 @@ router.post("/api/signIn", (req, res) => {
                   sameSite: "None",
                   secure: true
                 })
-                .cookie("user", user, {
-                  expires: cookieTimer,
-                  httpOnly: false,
-                  sameSite: "None",
-                  secure: true
-                  //httpOnly false but check using authentication.js
-                })
+                // .cookie("user", user, {
+                //   expires: cookieTimer,
+                //   httpOnly: false,
+                //   sameSite: "None",
+                //   secure: true
+                //   //httpOnly false but check using authentication.js
+                // })
                 .status(200)
                 .json({
                   code: 200,
-                  message: "success"
+                  message: "success",
+                  user: user
                   //user: user you can send this to the browser if httpOnly: true is set in cookie user
                 });
             } else {
