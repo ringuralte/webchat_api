@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 //serving file
-app.use(express.static(path.join(__dirname, "client/out")));
+// app.use(express.static(path.join(__dirname, "client/out")));
 
 //custom routes
 app.use(checkTokenRoute);
