@@ -95,7 +95,7 @@ router.post("/api/signIn", (req, res) => {
       }
     })
     .catch(err => {
-      console.log("error  " + err.message);
+      console.log("signin error " + err.message);
     });
 });
 

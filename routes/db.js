@@ -66,9 +66,9 @@ const createTableChats = () => {
 // }
 
 const pool = new Pool({
-  // connectionString: process.env.DATABASE_URL
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD
+  connectionString: process.env.DATABASE_URL
+  // user: process.env.PGUSER,
+  // password: process.env.PGPASSWORD
 });
 pool
   .connect()
