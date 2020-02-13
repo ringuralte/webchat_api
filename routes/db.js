@@ -1,26 +1,5 @@
-// TODO better try the npm mysql package this one doesn't seem to work with returns
-// const mysql = require("mysql");
-// const mariadb = require("mariadb");
-//
-// const pool = mariadb.createPool({
-//   user: process.env.DB_USER,
-//   database: process.env.DB_DATABASE,
-//   password: process.env.DB_PASSWORD,
-//   host: process.env.DB_HOST
-// });
-//
-// pool
-//   .getConnection()
-//   .then(conn => {
-//     console.log("connection to database success" + conn.threadId);
-//   })
-//   .catch(err => {
-//     console.log("error occured " + err.message);
-//   });
-//
-// module.exports = pool;
-
-const {Pool} = require("pg");
+//database stuffs using postgresql
+const { Pool } = require("pg");
 
 //create user table
 const createTableUsers = () => {
@@ -33,10 +12,10 @@ const createTableUsers = () => {
   pool
     .query(queryString)
     .then(() => {
-      console.log('user table created');
+      console.log("user table created");
     })
     .catch(err => {
-      console.log('createtableusers error ' + err);
+      console.log("createtableusers error " + err);
     });
 };
 
@@ -50,10 +29,10 @@ const createTableTopics = () => {
   pool
     .query(queryString)
     .then(() => {
-      console.log('topic table created');
+      console.log("topic table created");
     })
     .catch(err => {
-      console.log('createtabletopics error ' + err);
+      console.log("createtabletopics error " + err);
     });
 };
 
@@ -67,12 +46,15 @@ const createTableChats = () => {
   time_send TIMESTAMP,
   title VARCHAR(50),
   FOREIGN KEY (title) REFERENCES topics (title))`;
-  pool.query(queryString).then(() => {
-    console.log('chat table created');
-  }).catch(err => {
-    console.log('createtablechats error ' + err)
-  })
-}
+  pool
+    .query(queryString)
+    .then(() => {
+      console.log("chat table created");
+    })
+    .catch(err => {
+      console.log("createtablechats error " + err);
+    });
+};
 
 // const createTopicItems = () => {
 //   const queryString = `INSERT INTO topics (title) VALUES ('general'),('dota2'),('csgo'),('wow')`
@@ -84,14 +66,18 @@ const createTableChats = () => {
 // }
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  // connectionString: process.env.DATABASE_URL
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD
 });
 pool
   .connect()
   .then(() => {
     console.log("connection to database success");
   })
-  .then(createTableUsers).then(createTableTopics).then(createTableChats)
+  .then(createTableUsers)
+  .then(createTableTopics)
+  .then(createTableChats)
   .catch(err => {
     console.log("error occured " + err.message);
   });

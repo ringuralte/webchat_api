@@ -21,7 +21,8 @@ const checkTokenRoute = require("./routes/api/checkToken");
 app.use(
   cors({
     origin: "https://fast-oasis-98847.herokuapp.com",
-    // origin: "http://localhost:3000",
+    origin: "http://localhost:3000",
+    origin: "http://webchat.ringuralte.now.sh",
     credentials: true
   })
 );
@@ -49,4 +50,3 @@ io.on("connection", socket => {
     io.emit("chat message", msg);
   });
 });
-
