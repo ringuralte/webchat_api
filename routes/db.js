@@ -25,6 +25,7 @@ const createTableTopics = () => {
   topics(
   id serial PRIMARY KEY,
   title VARCHAR(50) NOT NULL,
+  user_id VARCHAR(255) NOT NULL,
   UNIQUE(title))`;
   pool
     .query(queryString)

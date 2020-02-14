@@ -13,10 +13,16 @@ router.get("/api/getChats/:title", jwtAuth, (req, res) => {
   };
   db.query(query)
     .then(result => {
-      res.status(200).json({
-        chats: result.rows,
-        code: 200
-      });
+      setTimeout(() => {
+        res.status(200).json({
+          chats: result.rows,
+          code: 200
+        });
+      }, 2000);
+      // res.status(200).json({
+      //   chats: result.rows,
+      //   code: 200
+      // });
     })
     .catch(err => {
       console.log(`error ${err.message}`);

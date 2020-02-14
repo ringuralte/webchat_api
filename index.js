@@ -10,19 +10,19 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, { cookie: false });
 
 const userRouter = require("./routes/api/users");
 const topicsRoute = require("./routes/api/topics");
 const chatsRoute = require("./routes/api/chats");
 const checkTokenRoute = require("./routes/api/checkToken");
+const createGroupRoute = require("./routes/api/groups");
 
 //middleware
 app.use(
   cors({
-    origin: "https://fast-oasis-98847.herokuapp.com",
     origin: "http://localhost:3000",
-    origin: "https://webchat.ringuralte.now.sh",
+    // origin: "https://webchat.ringuralte.now.sh",
     credentials: true
   })
 );
@@ -38,6 +38,7 @@ app.use(checkTokenRoute);
 app.use(userRouter);
 app.use(topicsRoute);
 app.use(chatsRoute);
+app.use(createGroupRoute);
 
 //listen
 server.listen(PORT, () => console.log(`Listening on ${PORT}`));

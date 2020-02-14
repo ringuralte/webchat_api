@@ -60,16 +60,16 @@ router.post("/api/signIn", (req, res) => {
 
               res
                 .cookie("chatusertoken", token, {
-                  expires: cookieTimer,
-                  httpOnly: true,
-                  sameSite: "None",
-                  secure: true
+                  expires: cookieTimer
+                  // httpOnly: true,
+                  // sameSite: "None",
+                  // secure: true
                 })
                 .cookie("user", user, {
-                  expires: cookieTimer,
-                  httpOnly: true,
-                  sameSite: "None",
-                  secure: true
+                  expires: cookieTimer
+                  // httpOnly: true,
+                  // sameSite: "None",
+                  // secure: true
                   //httpOnly false but check using authentication.js
                 })
                 .status(200)
