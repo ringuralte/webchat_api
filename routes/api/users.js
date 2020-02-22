@@ -26,10 +26,21 @@ router.post("/api/signUp", (req, res) => {
           console.log(`created new user ${result}`);
         })
         .catch(err => {
-          res.status(400).json({
-            code: 400,
-            msg: "username is not available"
-          });
+          //might miss some errors too
+          //the codes are from err.code from pg package i guess
+          //23505 checks for uniqueness and 22001 checks for length
+          if (err.code == 23505) {
+            res.status(400).json({
+              code: 23505,
+              msg: "username is not available"
+            });
+          }
+          if (err.code == 22001) {
+            res.status(400).json({
+              code: 22001,
+              msg: "username should be < 25 characters"
+            });
+          }
           console.log(`errror this is the message ${err.message}`);
         });
     });
@@ -60,16 +71,16 @@ router.post("/api/signIn", (req, res) => {
 
               res
                 .cookie("chatusertoken", token, {
-                  expires: cookieTimer
-                  // httpOnly: true,
-                  // sameSite: "None",
-                  // secure: true
+                  expires: cookieTimer,
+                  httpOnly: true,
+                  sameSite: "None",
+                  secure: true
                 })
                 .cookie("user", user, {
-                  expires: cookieTimer
-                  // httpOnly: true,
-                  // sameSite: "None",
-                  // secure: true
+                  expires: cookieTimer,
+                  httpOnly: true,
+                  sameSite: "None",
+                  secure: true
                   //httpOnly false but check using authentication.js
                 })
                 .status(200)
@@ -93,8 +104,8 @@ router.post("/api/signIn", (req, res) => {
           });
       } else {
         console.log("user does not exist");
-        res.status(401).json({
-          code: 401,
+        res.status(400).json({
+          code: 400,
           msg: "User does not exist"
         });
       }
@@ -105,7 +116,6 @@ router.post("/api/signIn", (req, res) => {
 });
 
 router.get("/api/signOut", (req, res) => {
-  console.log("sign out");
   res.clearCookie("chatusertoken");
   res.clearCookie("user");
   res.status(200).json({

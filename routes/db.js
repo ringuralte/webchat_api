@@ -6,7 +6,7 @@ const createTableUsers = () => {
   const queryString = `CREATE TABLE IF NOT EXISTS
   users(
   id serial PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(25) NOT NULL,
   password VARCHAR(512) NOT NULL,
   UNIQUE(user_id))`;
   pool
@@ -20,18 +20,21 @@ const createTableUsers = () => {
 };
 
 //create topic table
-const createTableTopics = () => {
+//here user_id is not unique cause one person can create multiple groups
+const createTableTopicsAndChats = () => {
   const queryString = `CREATE TABLE IF NOT EXISTS
   topics(
   id serial PRIMARY KEY,
-  title VARCHAR(50) NOT NULL,
-  user_id VARCHAR(255) NOT NULL,
+  title VARCHAR(20) NOT NULL,
+  user_id VARCHAR(25) NOT NULL,
   UNIQUE(title))`;
   pool
     .query(queryString)
-    .then(() => {
+    .then(res => {
       console.log("topic table created");
     })
+    //adding chat table here cause it causes error due to foreign key dependency
+    .then(createTableChats)
     .catch(err => {
       console.log("createtabletopics error " + err);
     });
@@ -42,10 +45,10 @@ const createTableChats = () => {
   const queryString = `CREATE TABLE IF NOT EXISTS
   chats(
   id serial PRIMARY KEY,
-  sender VARCHAR(255) NOT NULL,
+  sender VARCHAR(25) NOT NULL,
   msg TEXT NOT NULL,
   time_send TIMESTAMP,
-  title VARCHAR(50),
+  title VARCHAR(20),
   FOREIGN KEY (title) REFERENCES topics (title))`;
   pool
     .query(queryString)
@@ -57,19 +60,8 @@ const createTableChats = () => {
     });
 };
 
-// const createTopicItems = () => {
-//   const queryString = `INSERT INTO topics (title) VALUES ('general'),('dota2'),('csgo'),('wow')`
-//   pool.query(queryString).then(() => {
-//     console.log('topic items created')
-//   }).catch(err => {
-//     console.log('createtopicitems error ' + err)
-//   })
-// }
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
-  // user: process.env.PGUSER,
-  // password: process.env.PGPASSWORD
 });
 pool
   .connect()
@@ -77,8 +69,7 @@ pool
     console.log("connection to database success");
   })
   .then(createTableUsers)
-  .then(createTableTopics)
-  .then(createTableChats)
+  .then(createTableTopicsAndChats)
   .catch(err => {
     console.log("error occured " + err.message);
   });

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/api/topics", (req, res) => {
   const query = {
-    text: "SELECT id,title FROM topics"
+    text: "SELECT id,title,user_id FROM topics"
   };
   db.query(query)
     .then(result => {

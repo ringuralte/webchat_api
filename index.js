@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 
 require("dotenv").config();
 
@@ -21,8 +20,8 @@ const createGroupRoute = require("./routes/api/groups");
 //middleware
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    // origin: "https://webchat.ringuralte.now.sh",
+    // origin: "http://localhost:3000",
+    origin: "https://webchat.ringuralte.now.sh",
     credentials: true
   })
 );
@@ -45,7 +44,7 @@ server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 //socketio
 io.on("connection", socket => {
-  console.log("user connected");
+  // console.log("user connected");
   socket.on("chat message", function(msg) {
     console.log("message:" + JSON.stringify(msg));
     io.emit("chat message", msg);

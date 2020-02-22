@@ -13,16 +13,10 @@ router.get("/api/getChats/:title", jwtAuth, (req, res) => {
   };
   db.query(query)
     .then(result => {
-      setTimeout(() => {
-        res.status(200).json({
-          chats: result.rows,
-          code: 200
-        });
-      }, 2000);
-      // res.status(200).json({
-      //   chats: result.rows,
-      //   code: 200
-      // });
+      res.status(200).json({
+        chats: result.rows,
+        code: 200
+      });
     })
     .catch(err => {
       console.log(`error ${err.message}`);
@@ -38,19 +32,26 @@ router.post("/api/postChat", jwtAuth, (req, res) => {
       "INSERT into chats (sender, msg, time_send, title) values ($1, $2, NOW(), (select title from topics where title=$3)) RETURNING id",
     values: [sender, msg, JSON.parse(topic)]
   };
-  db.query(query)
-    .then(result => {
-      const id = Object.keys(result.rows).map(key => {
-        return result.rows[key].id;
+  if (msg.length < 1000) {
+    db.query(query)
+      .then(result => {
+        const id = Object.keys(result.rows).map(key => {
+          return result.rows[key].id;
+        });
+        res.status(200).json({
+          id,
+          code: 200
+        });
+      })
+      .catch(err => {
+        console.log(err.message);
       });
-      res.status(200).json({
-        id,
-        code: 200
-      });
-    })
-    .catch(err => {
-      console.log(err.message);
+  } else {
+    res.status(400).json({
+      code: 400,
+      message: "Message too long < 1000 you are at "
     });
+  }
 });
 
 module.exports = router;
